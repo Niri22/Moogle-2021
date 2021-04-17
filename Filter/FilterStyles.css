@@ -1,0 +1,14 @@
+.filterCheckbox {
+    display: inline-block;
+}
+.checkbox {
+    cursor: pointer;
+    margin-right: .5em;
+}
+.filterTitle {
+    display: inline-block;
+}
+
+.hidden {
+    display: none;
+}
