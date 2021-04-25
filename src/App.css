@@ -10,3 +10,7 @@ body {
   padding: 1em;
   justify-content: center;
 }
+
+.searchbar {
+  display: block;
+}
