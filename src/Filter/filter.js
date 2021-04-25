@@ -1,15 +1,17 @@
 import React from "react";
 import "monday-ui-react-core/dist/main.css"
+import Dropdown from "react-dropdown"
+import { TextField } from 'monday-ui-react-core'
 import "./FilterStyles.css"
-import { Heading } from "monday-ui-react-core"
 
-class FilterSelector extends React.Component {
+class Filter extends React.Component {
   constructor(props) {
     super(props);
 
     // Default state
     this.state = {
       checked: false,
+      filterValue: this.props.filterObject.type === 'date' ? [] : '',
       name: "",
     };
   }
@@ -17,15 +19,24 @@ class FilterSelector extends React.Component {
   componentDidMount() {
   }
 
-  toggleFilter(event) {
+  async changeFilterValue(value) {
+    if(this.state.checked) {
+      await this.props.removeSelectedFilter(this.props.filterObject.field)
+      // read with new value
+      this.props.addSelectedFilter(this.props.filterObject.field, value)
+    }
+    this.setState({
+      filterValue: value,
+    })
+  }
+
+  async toggleFilter(event) {
       this.setState({
           checked: !this.state.checked
       })
-      if(this.this.state.checked) {
-        this.props.addSelectedFilter();
-      }
-      else {
-        this.props.removeSelectedFilter();
+      await this.props.removeSelectedFilter(this.props.filterObject.field)
+      if(!this.state.checked) {
+        this.props.addSelectedFilter(this.props.filterObject.field, this.state.filterValue)
       }
   }
 
@@ -44,14 +55,44 @@ class FilterSelector extends React.Component {
           onChange={this.toggleFilter.bind(this)}
         />
       </div>
-      <Heading className={"filterTitle"} type="h4" value={this.toCapitalized(this.props.filterObject.title)} />
+      <h4 className={"filterTitle"}>{this.toCapitalized(this.props.filterObject.title)}</h4>
       {
         this.props.filterObject.type === 'dropdown' ?
-          null :
-          null
+          <Dropdown
+          className="filterDropdown"
+          disabled={!this.state.checked}
+          options={this.props.filterObject.values}
+          placeholder={"Select option"}
+          onChange={value => this.changeFilterValue(value.value)}
+          value={this.state.filterValue}
+        /> : null
+      }
+      {
+        this.props.filterObject.type === 'text' ?
+          <TextField
+            placeholder={'Type value here'}
+            value={this.state.filterValue}
+            onChange={value => this.changeFilterValue(value)}
+          /> : null
+      }
+      {
+        this.props.filterObject.type === 'date' ?
+          <div>
+            <TextField
+              placeholder={'MM/DD/YYYY'}
+              value={this.state.filterValue[0]}
+              onChange={value => this.changeFilterValue([ value, this.state.filterValue[1] ])}
+            />
+            <p>to</p>
+            <TextField
+              placeholder={'MM/DD/YYYY'}
+              value={this.state.filterValue[1]}
+              onChange={value => this.changeFilterValue([ this.state.filterValue[0], value ])}
+            />
+          </div> : null
       }
     </div>
   }
 }
 
-export default FilterSelector;
+export default Filter;
