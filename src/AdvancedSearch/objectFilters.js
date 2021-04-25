@@ -32,6 +32,14 @@ export default class ObjectFilters extends React.Component {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
+  async addSelectedFilter(title, value) {
+    await this.props.addSelectedFilter(this.objectType, title, value)
+  }
+
+  async removeSelectedFilter(field) {
+    await this.props.removeSelectedFilter(this.objectType, field)
+  }
+
   render() {
     return <div className="ObjectFilters">
       <MenuItem
@@ -41,7 +49,10 @@ export default class ObjectFilters extends React.Component {
       >
         <Menu isSubMenu={true} size={Menu.sizes.MEDIUM}>
           {this.filters.map(filterObject =>
-            <Filter filterObject={filterObject} addSelectedFilter={() => {}} removeSelectedFilter={() => {}}/>
+            <Filter filterObject={filterObject} 
+              addSelectedFilter={this.addSelectedFilter.bind(this)} 
+              removeSelectedFilter={this.removeSelectedFilter.bind(this)}
+            />
           )}
         </Menu>
       </MenuItem>

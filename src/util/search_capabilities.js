@@ -5,9 +5,9 @@ const filtersByObjectType = {
                 field: "state",
                 title: "State", 
                 type: "dropdown",
-                values: []
+                values: ["all", "active", "archived", "deleted"]
             }, 
-            {
+            /*{
                 field: "tags",
                 title: "Tags",
                 type: "text",
@@ -18,9 +18,9 @@ const filtersByObjectType = {
                 title: "Updated Date",
                 type: "date",
                 values: []
-            }
+            }*/
         ],
-        searchableFields: ["state", "description", "owner", "groups", "name", "subscribers", "tags", "updated_at"],
+        searchableFields: ["state", "description", "owner", "groups", "name", "subscribers", "tags"],
         resultFields: {
             title: "name",
             url: null,
@@ -28,35 +28,13 @@ const filtersByObjectType = {
             updated: "updated_at"
         }
     },
-    assets: {
+    items: {
         filters: [
-            {
-                field: "file_extension",
-                title: "File Extension",
-                type: "text",
-                values: [],
-            },
-            {
-                field: "created_at",
-                title: "Created Date",
-                type: "date",
-                values: [],
-            }
-        ],
-        searchableFields: ["file_extension", "name", "uploaded_by"],
-        resultFields: {
-            title: ["name", "file_extension"],
-            url: "url",
-            created: "created_at"
-        }
-    },
-    item: {
-        filters: [
-            {
+            /*{
                 field: "state",
                 title: "State",
                 type: "dropdown",
-                values: [],
+                values: ['true', 'false'],
             },
             {
                 field: "created_at",
@@ -69,9 +47,9 @@ const filtersByObjectType = {
                 title: "Updated Date",
                 type: "date",
                 values: [],
-            }
+            }*/
         ],
-        searchableFields: ["board", "column_values", "created_at", "creator", "group", "name", "state", "subscribers", "updated_at"],
+        searchableFields: ["board", "column_values", "creator", "group", "name", "state", "subscribers"],
         resultFields: {
             title:  "name",
             url: null,
@@ -81,7 +59,7 @@ const filtersByObjectType = {
     },
     tags: {
         filters: [
-            {
+            /*{
                 field: "archived",
                 title: "Archived",
                 type: "dropdown",
@@ -92,7 +70,7 @@ const filtersByObjectType = {
                 title: "Type",
                 type: "dropdown",
                 values: [],
-            }
+            }*/
         ],
         searchableFields: [],
         resultFields: {
@@ -103,7 +81,7 @@ const filtersByObjectType = {
     },
     updates: {
         filters: [
-            {
+            /*{
                 field: "archived",
                 title: "Archived",
                 type: "dropdown",
@@ -120,7 +98,7 @@ const filtersByObjectType = {
                 title: "Created Date",
                 type: "date",
                 values: [],
-            },
+            },*/
         ],
         searchableFields: [],
         resultFields: {
@@ -135,9 +113,9 @@ const filtersByObjectType = {
                 field: "kind",
                 title: "Kind",
                 type: "dropdown",
-                values: [],
+                values: ["all", "non_guests", "guests", "non_pending"],
             },
-            {
+            /*{
                 field: "country_code",
                 title: "Country Code",
                 type: "text",
@@ -148,7 +126,7 @@ const filtersByObjectType = {
                 title: "Created Date",
                 type: "date",
                 values: [],
-            }
+            }*/
         ],
         searchableFields: [],
         resultFields: {
