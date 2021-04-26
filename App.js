@@ -11,7 +11,7 @@ import SearchBar from './SearchBar';
 import DataList from './DataList';
 
 const monday = mondaySdk();
-let query = '{boards(limit:5) { name description items} }';
+// let query = '{boards(limit:3) { name id description items { name column_values{title id type text } } } }';
 
 class App extends React.Component {
   constructor(props) {
@@ -27,25 +27,25 @@ class App extends React.Component {
   }
   
 
-  async fetchData() {
-    return await fetch("https://api.monday.com/v2", {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjEwNjAyNDQwMCwidWlkIjoyMTEyNDk5MCwiaWFkIjoiMjAyMS0wNC0xMFQwMTozMDo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODU5MjkzMCwicmduIjoidXNlMSJ9.jhcnlnnIzbqiOYNSUv12XUu0DDQQ4lATbhQ9P5E4eYA'
-        },
-        body: JSON.stringify({
-          'query' : query
-        })
-      })
-      .then(response => response.json())
-      .then(response => {
-        this.setState({DataList: response.data});
-        this.setState({dataListDefault: response.data});
+  // async fetchData() {
+  //   return await fetch("https://api.monday.com/v2", {
+  //       method: 'post',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjEwNjAyNDQwMCwidWlkIjoyMTEyNDk5MCwiaWFkIjoiMjAyMS0wNC0xMFQwMTozMDo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODU5MjkzMCwicmduIjoidXNlMSJ9.jhcnlnnIzbqiOYNSUv12XUu0DDQQ4lATbhQ9P5E4eYA'
+  //       },
+  //       body: JSON.stringify({
+  //         'query' : query
+  //       })
+  //     })
+  //     .then(response => response.json())
+  //     .then(response => {
+  //       this.setState({DataList: response.data});
+  //       this.setState({dataListDefault: response.data});
 
-        //  setDataList(data) 
-        //  setDataListDefault(data)
-       });}
+  //       //  setDataList(data) 
+  //       //  setDataListDefault(data)
+  //      });}
 
   async updateInput(input) {
      const filtered = this.dataListDefault.filter(data => {
@@ -58,7 +58,32 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
+    /////
+    monday.listen("context", response => {
+      this.setState({context: response.data});
+      console.log(response.data);
+      monday.api(`query {
+        boards {
+          name
+          description
+          items {
+            name
+            column_values {
+              title
+            }
+          }
+        }
+      }
+      `
+      )
+      .then(response => {
+        this.setState({dataList: response.data});
+        this.setState({dataListDefault: response.data});
+      });
+      
+    })
+      
   }
 
   render() {
@@ -70,6 +95,7 @@ class App extends React.Component {
         input={this.input} 
         onChange={this.updateInput}
         />
+        {/* <p>{JSON.stringify(this.state.dataList, null, 2)}</p> */}
         <DataList dataList={this.dataList}/>
       </>
     );
