@@ -7,18 +7,53 @@ import filtersByObjectType from "./util/search_capabilities"
 import {Search} from "monday-ui-react-core"
 import AdvancedSearch from "./AdvancedSearch/AdvancedSearch"
 
+
+const startingQuery = '{boards(limit:5) { name description items} }'
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     // Default state
     this.state = {
+      searchString: '',
+      dataListDefault: {}, 
+      dataList : {},
       queryString: ''
     };
   }
 
+  async fetchInitialData() {
+    return await fetch("https://api.monday.com/v2", {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjEwNjAyNDQwMCwidWlkIjoyMTEyNDk5MCwiaWFkIjoiMjAyMS0wNC0xMFQwMTozMDo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODU5MjkzMCwicmduIjoidXNlMSJ9.jhcnlnnIzbqiOYNSUv12XUu0DDQQ4lATbhQ9P5E4eYA'
+      },
+      body: JSON.stringify({
+        'query' : query
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      this.setState({
+        dataList: response.data,
+        dataListDefault: response.data
+      });
+    });
+  }
+
+  async updateInput(searchString) {
+     const filtered = this.dataListDefault.filter(data => {
+      return data.name.toLowerCase().includes(searchString.toLowerCase())
+     })
+     this.setState({
+      searchString: this.searchString,
+      dataList: filtered
+    });
+  }
+
   componentDidMount() {
-    // TODO: set up event listeners
+    this.fetchInitialData();
   }
 
   generateFilterString(objectType, filters) {
@@ -58,6 +93,12 @@ class App extends React.Component {
 
   render() {
     return <div className="App">
+      <h1>Search Bar</h1>
+        <h2>Use th app to search for items accross different boards!</h2>
+        <SearchBar 
+        input={this.input} 
+        onChange={this.updateInput}
+        />
       <Search
         className="searchBar"
         inputAriaLabel={"Search bar"}
@@ -66,6 +107,7 @@ class App extends React.Component {
         iconName={"fa-search"}
       />
       <AdvancedSearch regenerateQuery={this.regenerateQuery.bind(this)}></AdvancedSearch>
+      <DataList dataList={this.dataList}/>
     </div>;
   }
 }
