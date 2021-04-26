@@ -1,19 +1,5 @@
 import React from 'react';
 
-///Problem occurs when Nested List // 
-// First I have a irregular nest List //
-
-// let newList = []
-
-// dataList.map(function mapper(OGlist) {
-//       if (Array.isArray(OGlist)) {
-//             return OGlist.map(mapper);
-//       }
-//       else {
-//             return newList.push(OGlist);
-//       }
-// })
-
 const DataList = ({dataList=[]}) => {
   return (
     <>
@@ -33,14 +19,5 @@ const DataList = ({dataList=[]}) => {
     </>
   );
 }
-
-{/* {dataList.map(function mapper(OGlist) {
-      if (Array.isArray(OGlist)) {
-            return OGlist.map(mapper);
-      }
-      else {
-            return newList.push(OGlist);
-      }
-      })} */}
 
 export default DataList
