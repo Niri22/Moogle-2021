@@ -1,13 +1,14 @@
 import React from "react";
 import "./App.css";
-// import mondaySdk from "monday-sdk-js";
+import mondaySdk from "monday-sdk-js";
 import "monday-ui-react-core/dist/main.css"
-//Explore more Monday React Components here: https://style.monday.com/
+
 import filtersByObjectType from "./util/search_capabilities"
 import {Search} from "monday-ui-react-core"
 import AdvancedSearch from "./AdvancedSearch/AdvancedSearch"
+import DataList from './DataList'
 
-
+const monday = mondaySdk()
 const startingQuery = '{boards(limit:5) { name description items} }'
 class App extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class App extends React.Component {
         'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjEwNjAyNDQwMCwidWlkIjoyMTEyNDk5MCwiaWFkIjoiMjAyMS0wNC0xMFQwMTozMDo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODU5MjkzMCwicmduIjoidXNlMSJ9.jhcnlnnIzbqiOYNSUv12XUu0DDQQ4lATbhQ9P5E4eYA'
       },
       body: JSON.stringify({
-        'query' : query
+        'query' : startingQuery
       })
     })
     .then(response => response.json())
@@ -93,18 +94,15 @@ class App extends React.Component {
 
   render() {
     return <div className="App">
-      <h1>Search Bar</h1>
-        <h2>Use th app to search for items accross different boards!</h2>
-        <SearchBar 
-        input={this.input} 
-        onChange={this.updateInput}
-        />
+      <h1>Moogle Search</h1>
       <Search
         className="searchBar"
         inputAriaLabel={"Search bar"}
         autoFocus={true}
-        placeholder={"Search here"}
+        placeholder={"Type your search here"}
         iconName={"fa-search"}
+        value={this.searchString}
+        onChange={this.updateInput}
       />
       <AdvancedSearch regenerateQuery={this.regenerateQuery.bind(this)}></AdvancedSearch>
       <DataList dataList={this.dataList}/>
