@@ -9,7 +9,6 @@ import AdvancedSearch from "./AdvancedSearch/AdvancedSearch"
 import DataList from './DataList'
 
 const monday = mondaySdk()
-const startingQuery = '{boards(limit:5) { name description items} }'
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -23,26 +22,6 @@ class App extends React.Component {
     };
   }
 
-  async fetchInitialData() {
-    return await fetch("https://api.monday.com/v2", {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjEwNjAyNDQwMCwidWlkIjoyMTEyNDk5MCwiaWFkIjoiMjAyMS0wNC0xMFQwMTozMDo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODU5MjkzMCwicmduIjoidXNlMSJ9.jhcnlnnIzbqiOYNSUv12XUu0DDQQ4lATbhQ9P5E4eYA'
-      },
-      body: JSON.stringify({
-        'query' : startingQuery
-      })
-    })
-    .then(response => response.json())
-    .then(response => {
-      this.setState({
-        dataList: response.data,
-        dataListDefault: response.data
-      });
-    });
-  }
-
   async updateInput(searchString) {
      const filtered = this.dataListDefault.filter(data => {
       return data.name.toLowerCase().includes(searchString.toLowerCase())
@@ -54,7 +33,27 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchInitialData();
+    monday.listen("context", response => {
+      this.setState({context: response.data});
+      console.log(response.data);
+      monday.api(`query {
+        boards {
+          name
+          description
+          items {
+            name
+            column_values {
+              title
+            }
+          }
+        }
+      }`).then(response => {
+        this.setState({
+          dataList: response.data,
+          dataListDefault: response.data
+        })
+      })
+    })
   }
 
   generateFilterString(objectType, filters) {
@@ -105,6 +104,7 @@ class App extends React.Component {
         onChange={this.updateInput}
       />
       <AdvancedSearch regenerateQuery={this.regenerateQuery.bind(this)}></AdvancedSearch>
+      {/* <p>{JSON.stringify(this.state.dataList, null, 2)}</p> */}
       <DataList dataList={this.dataList}/>
     </div>;
   }
