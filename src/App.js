@@ -4,8 +4,8 @@ import mondaySdk from "monday-sdk-js";
 import "monday-ui-react-core/dist/main.css"
 
 import filtersByObjectType from "./util/search_capabilities"
-import {Search} from "monday-ui-react-core"
 import AdvancedSearch from "./AdvancedSearch/AdvancedSearch"
+import SearchBar from './SearchBar'
 import DataList from './DataList'
 
 const monday = mondaySdk()
@@ -94,13 +94,8 @@ class App extends React.Component {
   render() {
     return <div className="App">
       <h1>Moogle Search</h1>
-      <Search
-        className="searchBar"
-        inputAriaLabel={"Search bar"}
-        autoFocus={true}
-        placeholder={"Type your search here"}
-        iconName={"fa-search"}
-        value={this.searchString}
+      <SearchBar
+        input={this.searchString}
         onChange={this.updateInput}
       />
       <AdvancedSearch regenerateQuery={this.regenerateQuery.bind(this)}></AdvancedSearch>
