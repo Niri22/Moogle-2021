@@ -1,24 +1,59 @@
 import React from "react";
 import "./App.css";
-// import mondaySdk from "monday-sdk-js";
+import mondaySdk from "monday-sdk-js";
 import "monday-ui-react-core/dist/main.css"
-//Explore more Monday React Components here: https://style.monday.com/
-import filtersByObjectType from "./util/search_capabilities"
-import {Search} from "monday-ui-react-core"
-import AdvancedSearch from "./AdvancedSearch/AdvancedSearch"
 
+import filtersByObjectType from "./util/search_capabilities"
+import AdvancedSearch from "./AdvancedSearch/AdvancedSearch"
+import SearchBar from './SearchBar'
+import DataList from './DataList'
+
+const monday = mondaySdk()
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     // Default state
     this.state = {
+      searchString: '',
+      dataListDefault: {}, 
+      dataList : {},
       queryString: ''
     };
   }
 
+  async updateInput(searchString) {
+     const filtered = this.dataListDefault.filter(data => {
+      return data.name.toLowerCase().includes(searchString.toLowerCase())
+     })
+     this.setState({
+      searchString: this.searchString,
+      dataList: filtered
+    });
+  }
+
   componentDidMount() {
-    // TODO: set up event listeners
+    monday.listen("context", response => {
+      this.setState({context: response.data});
+      console.log(response.data);
+      monday.api(`query {
+        boards {
+          name
+          description
+          items {
+            name
+            column_values {
+              title
+            }
+          }
+        }
+      }`).then(response => {
+        this.setState({
+          dataList: response.data,
+          dataListDefault: response.data
+        })
+      })
+    })
   }
 
   generateFilterString(objectType, filters) {
@@ -58,14 +93,14 @@ class App extends React.Component {
 
   render() {
     return <div className="App">
-      <Search
-        className="searchBar"
-        inputAriaLabel={"Search bar"}
-        autoFocus={true}
-        placeholder={"Search here"}
-        iconName={"fa-search"}
+      <h1>Moogle Search</h1>
+      <SearchBar
+        input={this.searchString}
+        onChange={this.updateInput}
       />
       <AdvancedSearch regenerateQuery={this.regenerateQuery.bind(this)}></AdvancedSearch>
+      {/* <p>{JSON.stringify(this.state.dataList, null, 2)}</p> */}
+      <DataList dataList={this.dataList}/>
     </div>;
   }
 }

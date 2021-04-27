@@ -1,16 +1,26 @@
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  overflow-y: hidden;
+}
+
 body {
   margin: 0;
+  padding: 0;
+  overflow-y: inherit;
   font-family: "Roboto", sans-serif;
 }
 
 .App {
   height: 100vh;
   width: 100vw;
-  display: flex;
   padding: 1em;
   justify-content: center;
 }
 
-.searchbar {
-  display: block;
+h1 {
+  margin: auto;
 }
