@@ -20,7 +20,7 @@ const filtersByObjectType = {
                 values: []
             }*/
         ],
-        searchableFields: ["state", "description", "owner", "groups", "name", "subscribers", "tags"],
+        searchableFields: ["state", "description", "name"],
         resultFields: {
             title: "name",
             url: null,
@@ -49,7 +49,7 @@ const filtersByObjectType = {
                 values: [],
             }*/
         ],
-        searchableFields: ["board", "column_values", "creator", "group", "name", "state", "subscribers"],
+        searchableFields: ["name", "state"],
         resultFields: {
             title:  "name",
             url: null,
@@ -72,7 +72,7 @@ const filtersByObjectType = {
                 values: [],
             }*/
         ],
-        searchableFields: [],
+        searchableFields: ["name", "color", "id"],
         resultFields: {
             title: "name",
             url: null,
@@ -100,7 +100,7 @@ const filtersByObjectType = {
                 values: [],
             },*/
         ],
-        searchableFields: [],
+        searchableFields: ['created_at', 'text_body', 'updated_at'],
         resultFields: {
             title: "id",
             url: null,
@@ -128,7 +128,7 @@ const filtersByObjectType = {
                 values: [],
             }*/
         ],
-        searchableFields: [],
+        searchableFields: ['name', 'email', 'phone', 'location', 'title', 'photo_small'],
         resultFields: {
             title: "name",
             url: "url",
