@@ -3,7 +3,7 @@ import "monday-ui-react-core/dist/main.css"
 import { MenuItem, Menu } from "monday-ui-react-core"
 
 import filtersByObjectType from "../util/search_capabilities"
-import Filter from "../Filter/filter"
+import Filter from "../Filter/Filter"
 
 export default class ObjectFilters extends React.Component {
   constructor(props) {

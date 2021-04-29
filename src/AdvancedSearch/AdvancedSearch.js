@@ -5,7 +5,7 @@ import {Collapse} from 'react-collapse';
 
 import "./advancedSearch.css"
 import filtersByObjectType from "../util/search_capabilities"
-import ObjectFilters from "./objectFilters";
+import ObjectFilters from "./ObjectFilters";
 export default class AdvancedSearch extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +34,7 @@ export default class AdvancedSearch extends React.Component {
 
   async addSelectedFilter(objectType, field, value) {
     const updatedFilters = [...this.state.activeFilters, {type: objectType, field: field, value: value}]
-    this.props.regenerateQuery(updatedFilters)
+    this.props.updateFilters(updatedFilters)
     console.log(updatedFilters)
     this.setState({
       activeFilters: updatedFilters
@@ -51,7 +51,7 @@ export default class AdvancedSearch extends React.Component {
     this.setState({
       activeFilters: updatedFilters
     })
-    this.props.regenerateQuery(updatedFilters)
+    this.props.updateFilters(updatedFilters)
   }
 
   render() {
