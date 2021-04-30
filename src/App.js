@@ -8,11 +8,11 @@ import filtersByObjectType from "./util/search_capabilities"
 import AdvancedSearch from "./AdvancedSearch/AdvancedSearch"
 import SearchBar from './SearchBar'
 import DataList from './DataList'
+import Divider from 'monday-ui-react-core'
 
-const monday = mondaySdk()
-monday.setToken('add key here') // TODO: add key here!!
+const monday = mondaySdk();
+let fuse = null;
 
-let fuse = null
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -23,99 +23,147 @@ class App extends React.Component {
       dataList : [],
       activeFilters: []
     };
+    
   }
-
+  
   async updateInput(searchString) {
-     const searchResults = fuse.search(searchString)
-     const filtered = this.addAdvancedFilters(searchResults)
-     console.log('filtered: ', filtered)
-     this.setState({
+    let searchResults = this.state.dataList
+    if(searchString && searchString.length > 0) {
+      searchResults = fuse.search(searchString).map(result => result.item)
+    }
+    const filtered = this.addAdvancedFilters(searchResults)
+    this.setState({
       searchString: this.searchString,
       dataList: filtered
     });
-  }
+ }
 
-  componentDidMount() {
-    console.log('in componentDidMount')
-    monday.listen("context", response => {
-      this.setState({context: response.data});
-      console.log('waiting to display data')
-      console.log(response.data);
-      monday.api(`query {
-        boards {
-          ${this.generateSearchableFieldsString('boards')}
-          items {
-            name
-            column_values {
-              title
-            }
+ addAdvancedFilters(searchResults) {
+  return searchResults.filter(result => {
+    let valid = true
+    this.state.activeFilters.forEach(filter => {
+      if(result.type === filter.type && result[filter.field] !== filter.value)
+        valid = false
+    })
+    return valid
+  })
+}
+
+ componentDidMount() {
+  console.log('in componentDidMount')
+  monday.listen("context", response => {
+    this.setState({context: response.data});
+    console.log('waiting to display data')
+    console.log(response.data);
+    monday.api(`query {
+      boards {
+        ${this.generateSearchableFieldsString('boards')}
+        items {
+          name
+          created_at
+          updated_at
+          column_values {
+            title
+            id
+            type
+            text
           }
         }
-        items {
-          ${this.generateSearchableFieldsString('items')}
-        }
-        tags {
-          ${this.generateSearchableFieldsString('tags')}
+      }
+      items {
+        created_at
+        updated_at
+        board {
+          name
         }
         updates {
-          ${this.generateSearchableFieldsString('updates')}
+          text_body
         }
-        users {
-          ${this.generateSearchableFieldsString('users')}
+        ${this.generateSearchableFieldsString('items')}
+      }
+      tags {
+        ${this.generateSearchableFieldsString('tags')}
+      }
+      updates {
+        creator {
+          id
+          name
         }
-      }`).then(response => {
-        // create fuse object to store all data that will be searchable later
-        const dataTypes = Object.keys(response.data)
-        const allTypedData = dataTypes.reduce((allData, type) => {
-          const typedData = response.data[type].map(resultObj => {return {...resultObj, type: type}})
-          return allData.concat(typedData)
-        }, [])
-        fuse = new Fuse(allTypedData, {
-          keys: [
-            'state', 
-            'description', 
-            'name', 
-            'color', 
-            'text_body', 
-            'updated_at', 
-            'email',
-            'phone',
-            'location',
-            'title',
-          ]
-        })
-        console.log('all data: ', allTypedData)
-        this.setState({
-          dataList: allTypedData,
-        })
+        replies {
+          id
+          text_body
+        }
+        ${this.generateSearchableFieldsString('updates')}
+      }
+      users {
+        email
+        phone
+        ${this.generateSearchableFieldsString('users')}
+      }
+    }`).then(response => {
+      // create fuse object to store all data that will be searchable later
+      const dataTypes = Object.keys(response.data)
+      const allTypedData = dataTypes.reduce((allData, type) => {
+        const typedData = response.data[type].map(resultObj => {return {...resultObj, type: type}})
+        return allData.concat(typedData)
+      }, [])
+      fuse = new Fuse(allTypedData, {
+        keys: [
+          'state', 
+          'description', 
+          'name', 
+          'color', 
+          'text_body', 
+          'updated_at', 
+          'email',
+          'phone',
+          'location',
+          'title',
+        ]
+      })
+      console.log('all data: ', allTypedData)
+      this.setState({
+        dataList: allTypedData,
       })
     })
-  }
+  })
+}
 
-  generateSearchableFieldsString(objectType) {
-    return filtersByObjectType[objectType].searchableFields.reduce((endString, nextField) => {
-      return endString + nextField + "\n"
-    }, '')
-  }
 
-  updateFilters(updatedFilters) {
-    this.setState({
-      activeFilters: updatedFilters
-    })
-  }
+generateSearchableFieldsString(objectType) {
+  return filtersByObjectType[objectType].searchableFields.reduce((endString, nextField) => {
+    return endString + nextField + "\n"
+  }, '')
+}
 
-  render() {
-    return <div className="App">
-      <h1>Moogle Search</h1>
-      <SearchBar
-        input={this.searchString}
-        onChange={this.updateInput.bind(this)}
-      />
-      <AdvancedSearch updateFilters={this.updateFilters.bind(this)}></AdvancedSearch>
-      {/* <p>{JSON.stringify(this.state.dataList, null, 2)}</p> */}
+updateFilters(updatedFilters) {
+  this.setState({
+    activeFilters: updatedFilters
+  }, () => {
+    this.updateInput(this.state.searchString)
+  })
+}
+
+render() {
+  return <div className="App">
+    <div class = "header">
+      </div>
+    
+    <h2>
+    <SearchBar
+      input={this.searchString}
+      onChange={this.updateInput.bind(this)}
+    /><p><AdvancedSearch updateFilters={this.updateFilters.bind(this)}></AdvancedSearch></p>
+    
+    </h2>
+    
+    {/* <div class = "header">{JSON.stringify(this.state.dataList, null, 2)}</div> */}
+    <div>
       <DataList dataList={this.state.dataList}/>
-    </div>;
-  }
+    </div>
+    
+  </div>;
+}
 }
 
 export default App;
