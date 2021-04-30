@@ -1,26 +1,138 @@
-*, *::before, *::after {
-  box-sizing: inherit;
-}
-
-html {
-  box-sizing: border-box;
-  overflow-y: hidden;
-}
-
 body {
   margin: 0;
-  padding: 0;
-  overflow-y: inherit;
-  font-family: "Roboto", sans-serif;
+  font-family: verdana;
+  background-color:white;
+  display: block;
 }
 
 .App {
-  height: 100vh;
-  width: 100vw;
-  padding: 1em;
+  height: 100;
+  width: 100;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  display: block;
+  
 }
 
-h1 {
-  margin: auto;
+.header {
+  background-color: #F1F1F1;
+  text-align: center;
+  padding: 30px;
+  display: block;
+  height: 175px;
+  background: url("./Moggle.logo.png") no-repeat center;
+}
+
+h2 {
+  text-align: center;
+  color: darkred;
+  display: block;
+}
+
+.ResultHeading {
+  text-align: left;
+  display: block;
+  color: white;
+}
+
+h3.ResultMoreInfo {
+  color: mediumseagreen;
+  display: block;
+}
+
+h4 {
+  color: grey;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+  
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #F1F1F1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+
+#rcornersboard {
+  border-radius: 25px;
+  background-color: #F1F1F1;
+  background:#648fff;
+  align-items: left;
+  border: 1px solid #648fff;
+  border-radius: 15px 50px 30px;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  margin-left: 3.5em;
+  padding: 20px; 
+  width: 1400px;
+  height: 90px;  
+  display: block;
+}
+
+#rcornersitem {
+  border-radius: 25px;
+  background-color: #F1F1F1;
+  align-items: left;
+  border: 2px solid #785ef0;
+  background:#785ef0;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  margin-left: 3.5em;
+  padding: 20px; 
+  width: 1400px;
+  height: 100px;  
+  display: block;
+}
+
+#rcornersupdates {
+  border-radius: 25px;
+  align-items: left;
+  border: 2px solid #dc267f;
+  background: #dc267f;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  margin-left: 3.5em;
+  padding: 20px; 
+  width: 1400px;
+  height: 100px;  
+  display: block;
+}
+
+
+#rcornerstags {
+  border-radius: 25px;
+  align-items: left;
+  border: 2px solid #fe6100;
+  background: #fe6100;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  margin-left: 3.5em;
+  padding: 20px; 
+  width: 1400px;
+  height: 100px;  
+  display: block;
+}
+
+#rcornersusers {
+  border-radius: 25px;
+  border: 2px solid #ffb000;
+  background: #ffb000;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  margin-left: 3.5em;
+  padding: 20px; 
+  width: 1400px;
+  height: 100px;  
 }
