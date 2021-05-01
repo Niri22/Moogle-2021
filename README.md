@@ -7,8 +7,6 @@ Download the repository, and in the folder, run:
   npm install
 ```
 
-Find your personal Monday.com API token, and copy it into the App.js file where the comment indicates.
-
 # Running the code locally
 To run the code, execute the command:
 ```sh
